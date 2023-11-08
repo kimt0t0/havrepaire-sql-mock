@@ -17,7 +17,7 @@ CREATE TABLE IF NOT EXISTS `articles` (
   `title_En` VARCHAR(120),
   `text_Fr` VARCHAR(1200),
   `text_En` VARCHAR(1200) NOT NULL,
-  `category` ENUM ('short', 'long', 'news', 'fantasy', 'science_fiction') NOT NULL DEFAULT 'news',
+  `categoryId` VARCHAR(36) NOT NULL DEFAULT('2bd65a10-7cbb-11ee-a619-9828a647f095'),
   `state` ENUM ('draft', 'published', 'archived') NOT NULL DEFAULT 'draft',
   `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ,
   `updated_at` DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
@@ -33,6 +33,13 @@ CREATE TABLE IF NOT EXISTS `comments` (
   `articleId` VARCHAR(36) NOT NULL,
   `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ,
   `updated_at` DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP  
+)
+ENGINE = InnoDB;
+
+CREATE TABLE IF NOT EXISTS `categories` (
+  PRIMARY KEY (categoryId),
+  `categoryId` VARCHAR(36) NOT NULL UNIQUE,
+  `name` VARCHAR(36) NOT NULL
 )
 ENGINE = InnoDB;
 
@@ -72,6 +79,8 @@ CREATE TABLE IF NOT EXISTS `users` (
 ENGINE = InnoDB;
 
 -- Add constraints on foreign keys --
+ALTER TABLE `articles`
+  ADD CONSTRAINT `hp_article_category` FOREIGN KEY (`categoryId`) REFERENCES `categories` (`categoryId`) ON DELETE RESTRICT ON UPDATE RESTRICT;
 
 ALTER TABLE `comments`
   ADD CONSTRAINT `hp_comment_user` FOREIGN KEY (`userId`) REFERENCES `users` (`userId`) ON DELETE CASCADE ON UPDATE CASCADE,
@@ -99,18 +108,24 @@ INSERT INTO `users` VALUES
 (UUID(), 'tonton', 'tonton@fake.net', 'TontonPass@44!', 'm', 'il', DEFAULT, DEFAULT, DEFAULT),
 (UUID(), 'tata', 'tata@fake.net', 'TataPass@44!', 'f', 'elle /ael', DEFAULT, DEFAULT, DEFAULT);
 
+-- (categories) --
+INSERT INTO `categories` VALUES
+( '2bd65a10-7cbb-11ee-a619-9828a647f095', 'science_fiction'),
+(UUID(), 'fantasy_fantastic'),
+(UUID(), 'news');
+
 -- (articles) --
 INSERT INTO `articles` VALUES
-('41d6022e-7cb4-11ee-a619-9828a647f095', 'Premier Article', DEFAULT, 'Ceci est le texte de mon tout premier article', DEFAULT, 'news', DEFAULT, DEFAULT, DEFAULT),
-(UUID(), 'Article traduit', 'Translated Article', 'Cet article est traduit.', 'This article is translated.', 'news', DEFAULT, DEFAULT, DEFAULT),
-('54c7578b-7cb4-11ee-a619-9828a647f095', 'Article formidable', 'Awesome Article', 'Voici mon super article !', 'Here is my great article !', ('fantasy'), 'published', DEFAULT, DEFAULT),
-(UUID(), 'Article test 1', DEFAULT, 'Ceci est le texte de test', DEFAULT, 'news', DEFAULT, DEFAULT, DEFAULT),
-(UUID(), 'Article test 2', DEFAULT, 'Ceci est le texte de test', DEFAULT, 'news', DEFAULT, DEFAULT, DEFAULT),
-(UUID(), 'Article test 3', DEFAULT, 'Ceci est le texte de test', DEFAULT, 'fantasy', DEFAULT, DEFAULT, DEFAULT),
-(UUID(), 'Article test 4', DEFAULT, 'Ceci est le texte de test', DEFAULT, 'science_fiction', DEFAULT, DEFAULT, DEFAULT),
-(UUID(), 'Article test 5', DEFAULT, 'Ceci est le texte de test', DEFAULT, 'news', DEFAULT, DEFAULT, DEFAULT),
-(UUID(), 'Article test 6', DEFAULT, 'Ceci est le texte de test', DEFAULT, 'science_fiction', DEFAULT, DEFAULT, DEFAULT),
-(UUID(), 'Article test 7', DEFAULT, 'Ceci est le texte de test', DEFAULT, 'fantasy', DEFAULT, DEFAULT, DEFAULT);
+('41d6022e-7cb4-11ee-a619-9828a647f095', 'Premier Article', DEFAULT, 'Ceci est le texte de mon tout premier article', DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT),
+(UUID(), 'Article traduit', 'Translated Article', 'Cet article est traduit.', 'This article is translated.', DEFAULT, DEFAULT, DEFAULT, DEFAULT),
+('54c7578b-7cb4-11ee-a619-9828a647f095', 'Article formidable', 'Awesome Article', 'Voici mon super article !', 'Here is my great article !', DEFAULT, 'published', DEFAULT, DEFAULT),
+(UUID(), 'Article test 1', DEFAULT, 'Ceci est le texte de test', DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT),
+(UUID(), 'Article test 2', DEFAULT, 'Ceci est le texte de test', DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT),
+(UUID(), 'Article test 3', DEFAULT, 'Ceci est le texte de test', DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT),
+(UUID(), 'Article test 4', DEFAULT, 'Ceci est le texte de test', DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT),
+(UUID(), 'Article test 5', DEFAULT, 'Ceci est le texte de test', DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT),
+(UUID(), 'Article test 6', DEFAULT, 'Ceci est le texte de test', DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT),
+(UUID(), 'Article test 7', DEFAULT, 'Ceci est le texte de test', DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT);
 
 -- (illustrations) --
 INSERT INTO `illustrations` VALUES
