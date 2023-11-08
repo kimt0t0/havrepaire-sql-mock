@@ -93,6 +93,14 @@ ALTER TABLE `likes`
 ALTER TABLE `illustrations`
   ADD CONSTRAINT `hp_illustration_article` FOREIGN KEY (`articleId`) REFERENCES `articles` (`articleId`) ON DELETE CASCADE ON UPDATE CASCADE;
 
+-- Add index --
+CREATE INDEX `category_name` ON `categories` (`name`);
+CREATE FULLTEXT INDEX `article_title_Fr` ON `articles` (`title_Fr`);
+
+-- Add views --
+CREATE VIEW `v_categories` AS SELECT * FROM categories;
+CREATE VIEW `v_recent_articles` AS SELECT a.*, i.illustrationId, i.filename, i.filepath FROM articles a LEFT JOIN illustrations i ON i.articleId = a.articleId GROUP BY a.articleId ORDER BY a.created_at DESC LIMIT 6;
+CREATE VIEW `v_popular_articles` AS SELECT a.*, i.illustrationId, i.filename, i.filepath, COUNT(l.likeId) nbLikes FROM articles a LEFT JOIN illustrations i ON i.articleId = a.articleId LEFT JOIN likes l ON l.articleId = a.articleId GROUP BY a.articleId ORDER BY nbLikes DESC LIMIT 3;
 
 -- End transaction --
 COMMIT;
@@ -111,7 +119,7 @@ INSERT INTO `users` VALUES
 -- (categories) --
 INSERT INTO `categories` VALUES
 ( '2bd65a10-7cbb-11ee-a619-9828a647f095', 'science_fiction'),
-(UUID(), 'fantasy_fantastic'),
+('dbba5959-7e49-11ee-af5a-9828a647f095', 'fantasy_fantastic'),
 (UUID(), 'news');
 
 -- (articles) --
@@ -125,7 +133,21 @@ INSERT INTO `articles` VALUES
 (UUID(), 'Article test 4', DEFAULT, 'Ceci est le texte de test', DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT),
 (UUID(), 'Article test 5', DEFAULT, 'Ceci est le texte de test', DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT),
 (UUID(), 'Article test 6', DEFAULT, 'Ceci est le texte de test', DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT),
-(UUID(), 'Article test 7', DEFAULT, 'Ceci est le texte de test', DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT);
+(UUID(), 'Article test 7', DEFAULT, 'Ceci est le texte de test', DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT),
+(UUID(), 'Article test 8', DEFAULT, 'Ceci est le texte de test', DEFAULT, 'dbba5959-7e49-11ee-af5a-9828a647f095', DEFAULT, DEFAULT, DEFAULT),
+(UUID(), 'Article test 9', DEFAULT, 'Ceci est le texte de test', DEFAULT, 'dbba5959-7e49-11ee-af5a-9828a647f095', DEFAULT, DEFAULT, DEFAULT),
+(UUID(), 'Article test 10', DEFAULT, 'Ceci est le texte de test', DEFAULT, 'dbba5959-7e49-11ee-af5a-9828a647f095', DEFAULT, DEFAULT, DEFAULT),
+(UUID(), 'Article test 11', DEFAULT, 'Ceci est le texte de test', DEFAULT, 'dbba5959-7e49-11ee-af5a-9828a647f095', DEFAULT, DEFAULT, DEFAULT),
+(UUID(), 'Article test 12', DEFAULT, 'Ceci est le texte de test', DEFAULT, 'dbba5959-7e49-11ee-af5a-9828a647f095', DEFAULT, DEFAULT, DEFAULT),
+(UUID(), 'Article test 13', DEFAULT, 'Ceci est le texte de test', DEFAULT, 'dbba5959-7e49-11ee-af5a-9828a647f095', DEFAULT, DEFAULT, DEFAULT),
+(UUID(), 'Article test 14', DEFAULT, 'Ceci est le texte de test', DEFAULT, 'dbba5959-7e49-11ee-af5a-9828a647f095', DEFAULT, DEFAULT, DEFAULT),
+(UUID(), 'Article test 15', DEFAULT, 'Ceci est le texte de test', DEFAULT, 'dbba5959-7e49-11ee-af5a-9828a647f095', DEFAULT, DEFAULT, DEFAULT),
+(UUID(), 'Article test 16', DEFAULT, 'Ceci est le texte de test', DEFAULT, 'dbba5959-7e49-11ee-af5a-9828a647f095', DEFAULT, DEFAULT, DEFAULT),
+(UUID(), 'Article test 17', DEFAULT, 'Ceci est le texte de test', DEFAULT, 'dbba5959-7e49-11ee-af5a-9828a647f095', DEFAULT, DEFAULT, DEFAULT),
+(UUID(), 'Article test 18', DEFAULT, 'Ceci est le texte de test', DEFAULT, 'dbba5959-7e49-11ee-af5a-9828a647f095', DEFAULT, DEFAULT, DEFAULT),
+(UUID(), 'Article test 19', DEFAULT, 'Ceci est le texte de test', DEFAULT, 'dbba5959-7e49-11ee-af5a-9828a647f095', DEFAULT, DEFAULT, DEFAULT),
+(UUID(), 'Article test 20', DEFAULT, 'Ceci est le texte de test', DEFAULT, 'dbba5959-7e49-11ee-af5a-9828a647f095', DEFAULT, DEFAULT, DEFAULT),
+(UUID(), 'Article test 21', DEFAULT, 'Ceci est le texte de test', DEFAULT, 'dbba5959-7e49-11ee-af5a-9828a647f095', DEFAULT, DEFAULT, DEFAULT);
 
 -- (illustrations) --
 INSERT INTO `illustrations` VALUES
