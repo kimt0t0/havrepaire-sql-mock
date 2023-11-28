@@ -102,6 +102,19 @@ CREATE VIEW `v_categories` AS SELECT * FROM categories;
 CREATE VIEW `v_recent_articles` AS SELECT a.*, i.illustrationId, i.filename, i.filepath FROM articles a LEFT JOIN illustrations i ON i.articleId = a.articleId GROUP BY a.articleId ORDER BY a.created_at DESC LIMIT 6;
 CREATE VIEW `v_popular_articles` AS SELECT a.*, i.illustrationId, i.filename, i.filepath, COUNT(l.likeId) nbLikes FROM articles a LEFT JOIN illustrations i ON i.articleId = a.articleId LEFT JOIN likes l ON l.articleId = a.articleId GROUP BY a.articleId ORDER BY nbLikes DESC LIMIT 3;
 
+-- Add stored procedure --
+DELIMITER //
+CREATE PROCEDURE averageLikes(OUT result INT)
+BEGIN
+	SELECT ROUND(AVG(nbLikes)) INTO result FROM (SELECT a.articleId, a.title_Fr, COUNT(l.likeId) nbLikes FROM `articles` a LEFT JOIN `likes` l USING(articleId) GROUP BY a.articleId) articleLikes;
+END //
+DELIMITER ;
+
+-- to use:
+-- CALL averageLikes(@n);
+-- SELECT @n;
+
+
 -- End transaction --
 COMMIT;
 
