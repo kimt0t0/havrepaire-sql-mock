@@ -115,7 +115,7 @@ DELIMITER ;
 -- SELECT @n;
 
 -- Add trigger --
-CREATE TRIGGER welcome_user BEFORE INSERT|UPDATE ON `users`
+CREATE TRIGGER welcome_user BEFORE INSERT OR UPDATE ON `users`
 SET NEW.username = CONCAT(UPPER(SUBSTRING(NEW.username, 1, 1)), LOWER(SUBSTRING(NEW.username, 2)));
 
 -- End transaction --
